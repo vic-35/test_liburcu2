@@ -45,7 +45,7 @@ void *test_l_get(void *arg)
         rcu_read_lock();
         struct t_node *node = NULL;
         count_elm = 0;
-        cds_list_for_each_entry(node, &t_list, node)
+        cds_list_for_each_entry_rcu(node, &t_list, node)
         {
             if (node->value != REZ1 && node->value != REZ2) {
                 printf("Fatal error :%lld :%lld :%lld\n", i, count, count_elm);
@@ -78,7 +78,7 @@ void *test_l_add(void *arg)
         if (count1 % 100 == 0) {
             rcu_read_lock();
             struct t_node *node = NULL;
-            cds_list_for_each_entry(node, &t_list, node)
+            cds_list_for_each_entry_rcu(node, &t_list, node)
             {
                 if (node->value == REZ2) {
                     cds_list_del_rcu(&node->node);
@@ -109,7 +109,7 @@ void *test_l_add(void *arg)
 
 int main()
 {
-    int num_threads = 12;
+    int num_threads = 6;
 
     long long i;
     struct t_node *node = NULL;
@@ -138,7 +138,7 @@ int main()
     long long count = 0;
     long long count1 = 0;
     rcu_read_lock();
-    cds_list_for_each_entry(node, &t_list, node)
+    cds_list_for_each_entry_rcu(node, &t_list, node)
     {
         if (node->value == REZ1)
             count++;
